@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, _res, next) => {
   req.user = {
-    _id: '562a0f4be4605723094f23541'
+    _id: '62a0f4be4605723094f23541'
   }
   next();
 });
@@ -21,7 +21,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
-
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
