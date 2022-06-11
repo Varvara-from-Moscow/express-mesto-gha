@@ -37,11 +37,16 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
+  const error = new Error('Пользователя по указанному _Id не найдено');
+  error.name = 'InvalidId'
   User.findById(userId)
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      if(!user) throw error;
+      res.send({ data:user });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, пользователь по указанному  _Id не найден' });
+        return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, пользователь по указанному _Id не найден' });
       }
       return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
     });
