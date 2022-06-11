@@ -45,10 +45,10 @@ module.exports.getUser = (req, res) => {
       res.send({ data:user });
     })
     .catch((err) => {
-      if (err.name === 'InvalidId') {
+      if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_ERROR).send({message: 'Ошибка, некорректные данные в запросe'})
       }
-      if (err.name === 'CastError') {
+      if (err.name === 'InvalidId') {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, пользователь по указанному _Id не найден' });
       }
       return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
