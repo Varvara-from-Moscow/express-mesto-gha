@@ -8,19 +8,46 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .then((user) => {
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: `Введены некорректные данные: ${err.message}` });
+      }
+      return res.status(DEFAULT_ERROR).send({ message: 'Произошла ошибка, попробуйте еще раз' });
+      });
+};
+
+/*
+   .then((user) => {
       if (!user) {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, не правильно заполнены поля формы' });
       }
       return res.send({ data: user });
     })
     .catch((err) => {
+
+      if (err.name === 'ValidationError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: `Введены некорректные данные: ${err.message}` });
+      }
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка, некорректные данные в запросe' });
       }
       return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
     });
+ */
+/*
+module.exports.createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+
+  User.create({ name, about, avatar })
+    .then((user) => res.send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: `Введены некорректные данные: ${err.message}` });
+      }
+      return res.status(500).send({ message: 'Произошла ошибка, попробуйте еще раз' });
+    });
 };
+*/
 
 module.exports.getUsers = (req, res) => {
   User.find({})
