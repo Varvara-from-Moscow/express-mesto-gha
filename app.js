@@ -22,6 +22,10 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use('/cards', require('./routes/cards'));
 app.use('/users', require('./routes/users'));
 
+app.use('*', (_req, res) => {
+  res.status(404).send({ message: 'Страница не найдена' });
+});
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
