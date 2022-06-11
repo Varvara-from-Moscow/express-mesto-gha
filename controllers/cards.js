@@ -7,17 +7,8 @@ const NOT_FOUND_ERROR = 404;
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .then((card) => {
-      if (!card) {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, карточки отсутствуют' });
-      }
-      return res.send({ data: card });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка, некорректные данные в запросе' });
-      }
-      return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
+    .catch(() => {
+        return res.status(DEFAULT_ERROR).send({ message: 'Ошибка по умолчанию' });
     });
 };
 
@@ -27,8 +18,8 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner: _id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка, некорректные данные в запросе' });
+      if (err.name === 'ValidationError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: `Ошибка, переданы некорректные данные при создании карточки: ${err.message}` });
       }
       return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
     });
@@ -40,7 +31,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(cardsId)
     .then((card) => {
       if (!card) {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, карточка не найдена' });
+        return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, карточка с указанным _id не найдена' });
       }
       return res.send({ data: card });
     })
