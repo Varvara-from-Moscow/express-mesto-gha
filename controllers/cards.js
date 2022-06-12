@@ -8,7 +8,7 @@ module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
     .catch(() => {
-        return res.status(DEFAULT_ERROR).send({ message: 'Ошибка по умолчанию' });
+      res.status(DEFAULT_ERROR).send({ message: 'Ошибка по умолчанию' });
     });
 };
 

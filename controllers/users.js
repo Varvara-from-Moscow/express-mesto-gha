@@ -12,41 +12,30 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         return res.status(BAD_REQUEST_ERROR).send({ message: `Ошибка, некорректные данные при создании пользователя: ${err.message}` });
       }
-      if (err.name === 'CastError') {
-        return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
-      }
+      return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
     });
 };
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .then((user) => {
-      if (!user) {
-        return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, пользователи отсутствуют' });
-      }
-      return res.send({ data: user });
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка, некорректные данные в запросe' });
-      }
-      return res.status(DEFAULT_ERROR).send({ message: 'Ошибка сервера' });
+    .catch(() => {
+      res.status(DEFAULT_ERROR).send({ message: 'Ошибка по умолчанию' });
     });
 };
 
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
   const error = new Error('Пользователя по указанному _Id не найдено');
-  error.name = 'InvalidId'
+  error.name = 'InvalidId';
   User.findById(userId)
     .then((user) => {
-      if(!user) throw error;
-      res.send({ data:user });
+      if (!user) throw error;
+      return res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        return res.status(BAD_REQUEST_ERROR).send({message: 'Ошибка, некорректные данные в запросe'})
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'Ошибка, некорректные данные в запросe' });
       }
       if (err.name === 'InvalidId') {
         return res.status(NOT_FOUND_ERROR).send({ message: 'Ошибка, пользователь по указанному _Id не найден' });
