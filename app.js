@@ -1,9 +1,8 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const path = require('path')
-const bodyParser = require('body-parser')
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-const { PORT = 3000, BASE_PATH } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 app.use(express.json());
@@ -12,8 +11,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, _res, next) => {
   req.user = {
-    _id: '62a0f4be4605723094f23541'
-  }
+    _id: '62a0f4be4605723094f23541',
+  };
   next();
 });
 
@@ -27,5 +26,5 @@ app.use('*', (_req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
+  console.log(`Listening port ${PORT}`);
 });
