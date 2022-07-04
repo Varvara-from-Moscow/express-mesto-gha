@@ -31,13 +31,14 @@ module.exports.createUser = (req, res, next) => {
           about,
           avatar,
         }))
-        .then((userData) => res.send({
+        .then((userData) => res.status(201).send({
           email: userData.email,
           id: userData._id,
           name: userData.name,
           about: userData.about,
           avatar: userData.avatar,
-        })).catch((err) => {
+        }))
+        .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new CastError('Введены некорректные данные'));
           }
