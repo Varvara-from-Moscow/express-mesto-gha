@@ -6,7 +6,7 @@ const auth = (req, res, next) => {
   const { cookies } = req;
 
   if (!cookies) {
-    next(res.status(403).send({ error: 'Авторизация не успешная' }));
+    next(res.status(403).send({ error: 'Авторизация не успешна' }));
   } else {
     const token = cookies.jwt;
     let payload;
