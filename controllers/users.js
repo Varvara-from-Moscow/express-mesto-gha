@@ -99,7 +99,7 @@ module.exports.getUser = (req, res, next) => {
       if (!user) {
         return next(new NotFoundError('Ошибка, пользователь по указанному _Id не найден'));
       }
-      return res.send({ user });
+      return res.status(200).send({ user });
     })
     .catch(next);
 };
