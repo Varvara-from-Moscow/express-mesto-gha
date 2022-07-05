@@ -28,6 +28,8 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
+app.use(limiter);
+
 const createUserLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 5,
@@ -36,8 +38,6 @@ const createUserLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-
-app.use(limiter);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
