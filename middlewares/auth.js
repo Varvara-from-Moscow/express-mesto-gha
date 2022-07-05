@@ -6,14 +6,14 @@ const auth = (req, res, next) => {
   const { cookies } = req;
 
   if (!cookies) {
-    next(res.status(403).send({ error: 'Авторизация не успешна' }));
+    next(res.status(401).send({ message: 'Авторизация не успешна' }));
   } else {
     const token = cookies.jwt;
     let payload;
     try {
       payload = jwt.verify(token, JWT_SECRET);
     } catch (err) {
-      next(res.status(403).send({ error: 'jwt token невалидный' }));
+      next(res.status(401).send({ message: 'jwt token невалидный' }));
     }
     req.user = payload;
     next();
