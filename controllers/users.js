@@ -75,7 +75,7 @@ module.exports.login = (req, res, next) => {
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send({ data: users }))
-    .catch(next);
+    .catch((err) => next(err));
 };
 
 module.exports.getСurrentUser = (req, res, next) => {
@@ -89,7 +89,7 @@ module.exports.getСurrentUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new CastError('Некорректный id пользователя'));
+        next(new CastError('Некорректныe данные'));
       } else {
         next(err);
       }
