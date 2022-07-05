@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors, celebrate, Joi } = require('celebrate');
-const rateLimit = require('express-rate-limit');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./Errors/NotFoundError');
@@ -21,24 +20,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', { useNewUrlParser: true, f
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-app.use(limiter);
-
-const createUserLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 5,
-  message:
-    'Too many accounts created from this IP, please try again after an hour',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -46,7 +27,7 @@ app.post('/signin', celebrate({
   }),
 }), login);
 
-app.post('/signup', createUserLimiter, celebrate({
+app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
