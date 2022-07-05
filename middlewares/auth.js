@@ -1,19 +1,21 @@
 const jwt = require('jsonwebtoken');
 
+const AuthError = require('../Errors/AuthError');
+
 const JWT_SECRET = 'SECRET';
 
 const auth = (req, res, next) => {
   const { cookies } = req;
 
   if (!cookies) {
-    next(res.status(401).send({ message: 'Авторизация не успешна' }));
+    throw new AuthError('Авторизация не успешна');
   } else {
     const token = cookies.jwt;
     let payload;
     try {
       payload = jwt.verify(token, JWT_SECRET);
     } catch (err) {
-      next(res.status(401).send({ message: 'jwt token невалидный' }));
+      throw new AuthError('jwt token невалидный');
     }
     req.user = payload;
     next();
