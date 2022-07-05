@@ -25,7 +25,7 @@ module.exports.createCard = (req, res, next) => {
       next(err);
     });
 };
-
+/*
 module.exports.deleteCard = (req, res, next) => {
   const { cardsId } = req.params;
 
@@ -43,6 +43,30 @@ module.exports.deleteCard = (req, res, next) => {
     }
     next(err);
   });
+};*/
+
+module.exports.deleteCard = (req, res, next) => {
+  const { cardId } = req.params;
+  Card.findById(cardId)
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка отсутствует');
+      }
+      if (card.owner.toString() !== req.user._id) {
+        throw new ForbiddenError('Это чужая карточка, вы не можете ее удалить');
+      } else {
+        Card.findByIdAndRemove(cardId)
+          .then(() => {
+            res.send({ messege: 'Карточка удалена' });
+          });
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new CastError('Введены некорректные данные');
+      }
+      next(err);
+    });
 };
 
 module.exports.likeCard = (req, res, next) => {
