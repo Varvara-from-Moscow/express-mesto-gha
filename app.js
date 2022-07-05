@@ -37,6 +37,8 @@ const createUserLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+app.use(limiter);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -62,7 +64,6 @@ app.all('*', () => {
   throw new NotFoundError('Страница не найдена');
 });
 
-app.use(limiter);
 app.use(errors());
 app.use(handleErrors);
 
