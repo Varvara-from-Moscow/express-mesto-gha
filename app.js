@@ -48,6 +48,4 @@ app.all('*', () => {
 app.use(errors());
 app.use(handleErrors);
 
-app.listen(PORT, () => {
-  console.log(`Listening port ${PORT}`);
-});
+app.listen(PORT);
